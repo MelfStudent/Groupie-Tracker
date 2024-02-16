@@ -1,3 +1,4 @@
+{{ define "index" }}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,11 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>ceci est la page index</h1>
+    <form action="/update" method="post">
+        <input type="text" name="newText" id="newText" placeholder="id" required>
+        <button type="submit" >Entrer</button>
+    </form>
+    <p>{{.Name}}</p>
 </body>
 </html>
+{{ end }}

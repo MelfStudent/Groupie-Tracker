@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Groupie-Tracker/server"
+	"github.com/MelfStudent/Groupie-Tracker.git/server"
 )
 
 func main() {
