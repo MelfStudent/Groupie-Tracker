@@ -23,7 +23,7 @@ type Artist struct {
 }
 
 var tmpl *template.Template
-var artist Artist
+var artist []Artist
 
 func StartServer() {
 	var err error
@@ -42,13 +42,12 @@ func StartServer() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
+			LoadArtist(w, r)
 			tmpl.Execute(w, artist)
 		} else {
 			fileServer.ServeHTTP(w, r)
 		}
 	})
-
-	http.HandleFunc("/update", LoadArtist)
 
 	fmt.Println("Pour accéder à la page web -> http://localhost:8080/")
 	err1 := http.ListenAndServe(":8080", nil)
@@ -59,10 +58,7 @@ func StartServer() {
 
 func LoadArtist(w http.ResponseWriter, r *http.Request) {
 
-	var input string
-	input = r.FormValue("newText")
-
-	apiURL := "https://groupietrackers.herokuapp.com/api/artists/" + input
+	apiURL := "https://groupietrackers.herokuapp.com/api/artists"
 
 	// Effectuez une requête HTTP GET
 	response, err := http.Get(apiURL)
@@ -92,5 +88,5 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	fmt.Println(artist)
 }
