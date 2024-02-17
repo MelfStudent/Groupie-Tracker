@@ -88,5 +88,5 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(artist)
+	//fmt.Println(artist)
 }

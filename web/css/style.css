@@ -2,12 +2,19 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.card {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* Deux colonnes, la première avec une largeur de 2fr et la deuxième avec une largeur de 1fr */
+    grid-template-rows: auto auto; /* Deux lignes automatiques */
+    gap: 2% 5%; /* Espace entre les éléments, ajustez selon vos besoins */
+}
+
 .flip-card {
     background-color: transparent;
     width: 300px;
     height: 300px;
     perspective: 1000px;
-    padding: 50px;
+    padding-bottom: 20%;
 }
 
 .flip-card-inner {
