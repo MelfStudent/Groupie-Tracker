@@ -9,6 +9,17 @@
 <body>
 <div class="nav">
     <h1>GROUPIE TRACKER</h1>
+    <details>
+        <summary>filters</summary>
+        <form action="/updateFilters" method="post">
+            <label for="dateSelectMin">Select Range Creation Date: </label>
+            <label for="dateSelectMin">Min: </label>
+            <input type="number" id="dateSelectMin" name="dateSelect" min="1900" max="2100" pattern="\d{4}" title="XXXX">
+            <label for="dateSelectMax">Max: </label>
+            <input type="number" id="dateSelectMax" name="dateSelect" min="1900" max="2100" pattern="\d{4}" title="XXXX">
+            <button type="submit">apply</button>
+        </form>
+    </details>
 </div>
 <div class="card">
     {{range .}}
