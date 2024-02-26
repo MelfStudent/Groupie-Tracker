@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/MelfStudent/Groupie-Tracker.git/server"
+	"Groupie-Tracker/Server"
 )
 
 func main() {
-	server.StartServer()
+	Server.StartServer()
 }
