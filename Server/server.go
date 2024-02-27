@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"Groupie-Tracker/Internal"
 )
@@ -33,6 +34,27 @@ func StartServer() {
 			tmpl.Execute(w, Internal.Artists)
 		} else {
 			fileServer.ServeHTTP(w, r)
+		}
+	})
+
+	http.HandleFunc("/updateFilters", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			err := r.ParseForm()
+			if err != nil {
+				http.Error(w, "Form data error", http.StatusBadRequest)
+				return
+			}
+
+			minDateStr := r.Form.Get("dateSelectMin")
+			maxDateStr := r.Form.Get("dateSelectMax")
+			minDate, _ := strconv.Atoi(minDateStr)
+			maxDate, _ := strconv.Atoi(maxDateStr)
+			filteredArtists := Internal.ResultFilters(minDate, maxDate, Internal.Artists)
+			err = tmpl.Execute(w, filteredArtists)
+			if err != nil {
+				return
+			}
+			return
 		}
 	})
 
