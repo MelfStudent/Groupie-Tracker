@@ -2,6 +2,7 @@ package Internal
 
 import (
 	"fmt"
+	"sort"
 )
 
 type FilteredArtist struct {
@@ -16,6 +17,7 @@ type FilteredArtist struct {
 	Relations    string   `json:"relations"`
 }
 
+// ResultFilters Retrieves input filters and returns a structure with the new data
 func ResultFilters(minDateStr int, maxDateStr int, _Artists []Artist) []FilteredArtist {
 	var Result []FilteredArtist
 
@@ -36,5 +38,10 @@ func ResultFilters(minDateStr int, maxDateStr int, _Artists []Artist) []Filtered
 			Result = append(Result, filtered)
 		}
 	}
+
+	sort.Slice(Result, func(i, j int) bool {
+		return Result[i].CreationDate < Result[j].CreationDate
+	})
+
 	return Result
 }
