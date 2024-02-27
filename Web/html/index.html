@@ -29,15 +29,17 @@
                 <img src="{{.Image}}" alt="{{.Name}}" style="width:300px;height:300px;">
                 <h2>{{.Name}}</h2>
             </div>
-            <div class="flip-card-back">
-                <h1>{{.Name}}</h1>
-                <hr>
-                <p>-members-</p>
-                <p>{{.Members}}</p>
-                <p>-creationDate-</p>
-                <p>{{.CreationDate}}</p>
-                <p>-firstAlbum-</p>
-                <p>{{.FirstAlbum}}</p>
+            <div style="background-image: url({{.Image}})" class="flip-card-back">
+                <div class="in-flip-card-back">
+                    <h1>{{.Name}}</h1>
+                    <hr>
+                    <p>-members-</p>
+                    <p>{{.Members}}</p>
+                    <p>-creationDate-</p>
+                    <p>{{.CreationDate}}</p>
+                    <p>-firstAlbum-</p>
+                    <p>{{.FirstAlbum}}</p>
+                </div>
             </div>
         </div>
     </div>

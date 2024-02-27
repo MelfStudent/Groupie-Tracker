@@ -21,7 +21,7 @@ type Artist struct {
 
 var Artists []Artist
 
-func LoadArtist(w http.ResponseWriter, r *http.Request) {
+func LoadArtist() {
 
 	apiURL := "https://groupietrackers.herokuapp.com/api/artists"
 

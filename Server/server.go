@@ -25,11 +25,11 @@ func StartServer() {
 		log.Fatal(err)
 	}
 
-	fileServer := http.FileServer(http.Dir(wd + "\\Web"))
+	fileServer := http.FileServer(http.Dir(wd + "/Web"))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
-			Internal.LoadArtist(w, r)
+			Internal.LoadArtist()
 			tmpl.Execute(w, Internal.Artists)
 		} else {
 			fileServer.ServeHTTP(w, r)
