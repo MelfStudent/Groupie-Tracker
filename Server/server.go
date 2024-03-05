@@ -12,11 +12,17 @@ import (
 )
 
 var tmpl *template.Template
+var tmpl_map *template.Template
 
 func StartServer() {
 	var err error
 
 	tmpl, err = template.New("index").ParseFiles("Web/HTML/index.html")
+	if err != nil {
+		panic(err)
+	}
+
+	tmpl_map, err = template.New("index").ParseFiles("Web/HTML/index.html")
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +37,16 @@ func StartServer() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			Internal.LoadArtist()
+			//Internal.MapArtist()
 			tmpl.Execute(w, Internal.Artists)
+		} else {
+			fileServer.ServeHTTP(w, r)
+		}
+	})
+
+	http.HandleFunc("/map", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/map" {
+			tmpl_map.Execute(w, Internal.Artists)
 		} else {
 			fileServer.ServeHTTP(w, r)
 		}

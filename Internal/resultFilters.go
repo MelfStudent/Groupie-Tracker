@@ -31,7 +31,7 @@ func ResultFilters(minDateStr int, maxDateStr int, _Artists []Artist) []Filtered
 				Members:      _Artists[i].Members,
 				CreationDate: _Artists[i].CreationDate,
 				FirstAlbum:   _Artists[i].FirstAlbum,
-				Locations:    _Artists[i].Locations,
+				Locations:    _Artists[i].LocationsUrl,
 				ConcertDates: _Artists[i].ConcertDates,
 				Relations:    _Artists[i].Relations,
 			}
