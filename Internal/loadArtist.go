@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
 )
 
 type Artist struct {
@@ -103,12 +102,12 @@ func LoadArtist() {
 
 		Artists[i].Locations = result.Locations
 
-		MapArtist(i)
+		//MapArtist(i)
 	}
 	//fmt.Println(Artists)
 }
 
-func MapArtist(index int) {
+/*func MapArtist(index int) {
 	apiKey := "4bb307b157f34868b7cc9acc4878e4f1"
 	for i := 0; i < len(Artists[index].Locations); i++ {
 		address := Artists[index].Locations[i]
@@ -148,7 +147,6 @@ func MapArtist(index int) {
 
 	}
 	fmt.Printf("Latitude: %f, Longitude: %f\n", Artists[index].Latitude, Artists[index].Longitude)
-	/*
 		if len(result.Results) > 0 {
 			Artists[0].Latitude = result.Results[0].Geometry.Lat
 			Artists[0].Longitude = result.Results[0].Geometry.Lng
@@ -156,5 +154,4 @@ func MapArtist(index int) {
 		} else {
 			fmt.Println("Aucun résultat trouvé.")
 		}
-	*/
-}
+}*/

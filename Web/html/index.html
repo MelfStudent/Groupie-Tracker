@@ -12,11 +12,70 @@
     <details>
         <summary>filters</summary>
         <form action="/updateFilters" method="post">
-            <label for="dateSelectMin">Select Range Creation Date: </label>
-            <label for="dateSelectMin">Min: </label>
-            <input type="number" id="dateSelectMin" name="dateSelectMin" min="1900" max="2100" pattern="\d{4}" title="XXXX">
-            <label for="dateSelectMax">Max: </label>
-            <input type="number" id="dateSelectMax" name="dateSelectMax" min="1900" max="2100" pattern="\d{4}" title="XXXX">
+            <label>Select Range Creation Date: </label>
+            <div>
+                <input type="range" id="creationDataMin" name="creationDateSelectMin" value="1970" min="1900" max="2100" step="1" oninput="this.nextElementSibling.value = this.value">
+                <output>1970</output>
+            </div>
+
+            <div>
+                <input type="range" id="creationDataMax" name="creationDateSelectMax" value="2020" min="1900" max="2100" step="1" oninput="this.nextElementSibling.value = this.value">
+                <output>2020</output>
+            </div>
+
+            <br>
+
+            <label>Select Range First Album: </label>
+            <label>Min: </label>
+            <input type="number" id="dateSelectMin2" name="firstAlbumSelectMin" min="1900" max="2100" pattern="\d{4}" title="XXXX">
+            <label>Max: </label>
+            <input type="number" id="dateSelectMax2" name="firstAlbumSelectMax" min="1900" max="2100" pattern="\d{4}" title="XXXX">
+
+            <br>
+
+            <label>Select location of the concert: </label>
+            <input type="text" id="name" name="locationConcert" minlength="1" maxlength="30" size="35" />
+
+            <fieldset>
+                <legend>Choose the number of members in the group:</legend>
+
+                <div>
+                    <input type="checkbox" id="number1" name="number1" />
+                    <label for="number1">1</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="number2" name="number2" />
+                    <label for="number2">2</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="number3" name="number3" />
+                    <label for="number3">3</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="number4" name="number4" />
+                    <label for="number4">4</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="number5" name="number5" />
+                    <label for="number5">5</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="number6" name="number6" />
+                    <label for="number6">6</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="number7" name="number7" />
+                    <label for="number7">7</label>
+                </div>
+
+            </fieldset>
+
             <button type="submit">apply</button>
         </form>
     </details>

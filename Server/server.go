@@ -1,14 +1,12 @@
 package Server
 
 import (
+	"Groupie-Tracker/Internal"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
-
-	"Groupie-Tracker/Internal"
 )
 
 var tmpl *template.Template
@@ -60,11 +58,12 @@ func StartServer() {
 				return
 			}
 
-			minDateStr := r.Form.Get("dateSelectMin")
-			maxDateStr := r.Form.Get("dateSelectMax")
-			minDate, _ := strconv.Atoi(minDateStr)
-			maxDate, _ := strconv.Atoi(maxDateStr)
-			filteredArtists := Internal.ResultFilters(minDate, maxDate, Internal.Artists)
+			formValues := make(map[string]string)
+			for key := range r.Form {
+				formValues[key] = r.Form.Get(key)
+			}
+
+			filteredArtists := Internal.ResultFilters(formValues, Internal.Artists)
 			err = tmpl.Execute(w, filteredArtists)
 			if err != nil {
 				return
