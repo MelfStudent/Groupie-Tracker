@@ -1,12 +1,14 @@
 package Server
 
 import (
-	"Groupie-Tracker/Internal"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+
+	"Groupie-Tracker/Internal"
 )
 
 var tmpl *template.Template
@@ -20,7 +22,7 @@ func StartServer() {
 		panic(err)
 	}
 
-	tmpl_map, err = template.New("index").ParseFiles("Web/HTML/index.html")
+	tmpl_map, err = template.New("map").ParseFiles("Web/HTML/map.html")
 	if err != nil {
 		panic(err)
 	}
@@ -34,7 +36,7 @@ func StartServer() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
-			Internal.LoadArtist()
+			Internal.LoadArtist(w, r)
 			//Internal.MapArtist()
 			tmpl.Execute(w, Internal.Artists)
 		} else {
@@ -58,12 +60,11 @@ func StartServer() {
 				return
 			}
 
-			formValues := make(map[string]string)
-			for key := range r.Form {
-				formValues[key] = r.Form.Get(key)
-			}
-
-			filteredArtists := Internal.ResultFilters(formValues, Internal.Artists)
+			minDateStr := r.Form.Get("dateSelectMin")
+			maxDateStr := r.Form.Get("dateSelectMax")
+			minDate, _ := strconv.Atoi(minDateStr)
+			maxDate, _ := strconv.Atoi(maxDateStr)
+			filteredArtists := Internal.ResultFilters(minDate, maxDate, Internal.Artists)
 			err = tmpl.Execute(w, filteredArtists)
 			if err != nil {
 				return
