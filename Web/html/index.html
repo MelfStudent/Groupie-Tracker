@@ -99,7 +99,7 @@
 </div>
 <div class="card">
     {{range .}}
-    <div class="flip-card">
+    <div class="flip-card" data-artist="{{index .}}">
         <div class="flip-card-inner">
             <div class="flip-card-front">
                 <img src="{{.Image}}" alt="{{.Name}}">
