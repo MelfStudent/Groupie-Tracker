@@ -259,6 +259,7 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		for i := 0; i < len(coordinates); i++ {
+			Artists[i].Coordinate = []DataCoordinate{}
 			for j := 0; j < len(coordinates[i]); j++ {
 				Artists[i].Coordinate = append(Artists[i].Coordinate, DataCoordinate{})
 				Artists[i].Coordinate[j].Latitude = coordinates[i][j][0]

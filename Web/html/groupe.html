@@ -1,0 +1,32 @@
+{{define "groupe"}}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/groupDetails.css">
+    <title>Group</title>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>{{.Name}}</h1>
+    </div>
+    <div class="image">
+        <img src="{{.Image}}" alt="{{.Name}}">
+    </div>
+    <div class="info">
+        <div class="detail">
+            <p>Date de création : {{.CreationDate}}</p>
+        </div>
+        <div class="detail">
+            <p>Premier album : {{.FirstAlbum}}</p>
+        </div>
+        <div class="detail">
+            <p>Membres : {{range .Members}}{{.}}, {{end}}</p>
+        </div>
+    </div>
+    <div class="maps">Maps</div>
+</div>
+</body>
+</html>
+{{end}}
