@@ -150,38 +150,39 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	for i := 0; i < len(Artists); i++ {
+		response, err := http.Get(Artists[i].LocationsUrl)
+		if err != nil {
+			fmt.Println("Erreur lors de la requête HTTP:", err)
+			return
+		}
+		defer response.Body.Close()
+
+		// Lisez le corps de la réponse
+		body, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Println("Erreur lors de la lecture de la réponse HTTP:", err)
+			return
+		}
+
+		// Vérifiez si la requête a réussi (statut 200 OK)
+		if response.StatusCode != http.StatusOK {
+			fmt.Println("La requête a échoué avec le statut:", response.Status)
+			return
+		}
+
+		// Décodez le JSON dans une structure LocationsResponse
+		var result LocationsResponse
+		err = json.Unmarshal(body, &result)
+		if err != nil {
+			fmt.Println("Erreur lors du décodage JSON:", err)
+			return
+		}
+
+		Artists[i].Locations = result.Locations
+	}
 	if time.Now().Unix()-dateInfo.Date >= 86400 {
 		for i := 0; i < len(Artists); i++ {
-			response, err := http.Get(Artists[i].LocationsUrl)
-			if err != nil {
-				fmt.Println("Erreur lors de la requête HTTP:", err)
-				return
-			}
-			defer response.Body.Close()
-
-			// Lisez le corps de la réponse
-			body, err := ioutil.ReadAll(response.Body)
-			if err != nil {
-				fmt.Println("Erreur lors de la lecture de la réponse HTTP:", err)
-				return
-			}
-
-			// Vérifiez si la requête a réussi (statut 200 OK)
-			if response.StatusCode != http.StatusOK {
-				fmt.Println("La requête a échoué avec le statut:", response.Status)
-				return
-			}
-
-			// Décodez le JSON dans une structure LocationsResponse
-			var result LocationsResponse
-			err = json.Unmarshal(body, &result)
-			if err != nil {
-				fmt.Println("Erreur lors du décodage JSON:", err)
-				return
-			}
-
-			Artists[i].Locations = result.Locations
-
 			MapArtist(i)
 		}
 		// Extrait uniquement les coordonnées des artistes
