@@ -24,26 +24,28 @@
 </div>
 <div class="card">
     {{range .}}
-    <div class="flip-card">
-        <div class="flip-card-inner">
-            <div class="flip-card-front">
-                <img src="{{.Image}}" alt="{{.Name}}">
-                <h2>{{.Name}}</h2>
-            </div>
-            <div style="background-image: url({{.Image}})" class="flip-card-back">
-                <div class="in-flip-card-back">
-                    <h1>{{.Name}}</h1>
-                    <hr>
-                    <p>-members-</p>
-                    <p>{{.Members}}</p>
-                    <p>-creationDate-</p>
-                    <p>{{.CreationDate}}</p>
-                    <p>-firstAlbum-</p>
-                    <p>{{.FirstAlbum}}</p>
+    <a href="/group/{{.ID}}" class="card-link">
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <img src="{{.Image}}" alt="{{.Name}}">
+                    <h2>{{.Name}}</h2>
+                </div>
+                <div style="background-image: url({{.Image}})" class="flip-card-back">
+                    <div class="in-flip-card-back">
+                        <h1>{{.Name}}</h1>
+                        <hr>
+                        <p>-members-</p>
+                        <p>{{.Members}}</p>
+                        <p>-creationDate-</p>
+                        <p>{{.CreationDate}}</p>
+                        <p>-firstAlbum-</p>
+                        <p>{{.FirstAlbum}}</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </a>
     {{end}}
 </div>
 </body>
