@@ -3,10 +3,11 @@ package Internal
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"time" // Importez le package time ici
+	"time"
 )
 
 type Artist struct {
@@ -57,64 +58,67 @@ type DateData struct {
 
 var Artists []Artist
 
-func LoadArtist(w http.ResponseWriter, r *http.Request) {
+func LoadArtist(w http.ResponseWriter) {
 
 	apiURL := "https://groupietrackers.herokuapp.com/api/artists"
 
-	// Effectuez une requête HTTP GET
 	response, err := http.Get(apiURL)
 	if err != nil {
-		fmt.Println("Erreur lors de la requête HTTP:", err)
+		fmt.Println("Error during HTTP request:", err)
 		return
 	}
-	defer response.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
 
-	// Lisez le corps de la réponse
+		}
+	}(response.Body)
+
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("Erreur lors de la lecture de la réponse HTTP:", err)
+		fmt.Println("Error reading HTTP response:", err)
 		return
 	}
 
-	// Vérifiez si la requête a réussi (statut 200 OK)
 	if response.StatusCode != http.StatusOK {
-		fmt.Println("La requête a échoué avec le statut:", response.Status)
+		fmt.Println("Request failed with status:", response.Status)
 		return
 	}
 
-	// Décodez le JSON dans une structure Artist
 	err = json.Unmarshal(body, &Artists)
 	if err != nil {
-		fmt.Println("Erreur lors du décodage JSON:", err)
+		fmt.Println("Error while decoding JSON:", err)
 		return
 	}
 
 	for i := 0; i < len(Artists); i++ {
 		response, err := http.Get(Artists[i].ConcertDates)
 		if err != nil {
-			fmt.Println("Erreur lors de la requête HTTP:", err)
+			fmt.Println("Error during HTTP request:", err)
 			return
 		}
-		defer response.Body.Close()
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
 
-		// Lisez le corps de la réponse
+			}
+		}(response.Body)
+
 		body, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			fmt.Println("Erreur lors de la lecture de la réponse HTTP:", err)
+			fmt.Println("Error reading HTTP response:", err)
 			return
 		}
 
-		// Vérifiez si la requête a réussi (statut 200 OK)
 		if response.StatusCode != http.StatusOK {
-			fmt.Println("La requête a échoué avec le statut:", response.Status)
+			fmt.Println("Request failed with status:", response.Status)
 			return
 		}
 
-		// Décodez le JSON dans une structure LocationsResponse
 		var resultDate DatesResponse
 		err = json.Unmarshal(body, &resultDate)
 		if err != nil {
-			fmt.Println("Erreur lors du décodage JSON:", err)
+			fmt.Println("Error while decoding JSON:", err)
 			return
 		}
 
@@ -139,9 +143,13 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer times.Close()
+	defer func(times *os.File) {
+		err := times.Close()
+		if err != nil {
 
-	// Décode le fichier JSON dans la structure DateData
+		}
+	}(times)
+
 	var dateInfo DateData
 	decoder := json.NewDecoder(times)
 	err = decoder.Decode(&dateInfo)
@@ -153,39 +161,41 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(Artists); i++ {
 		response, err := http.Get(Artists[i].LocationsUrl)
 		if err != nil {
-			fmt.Println("Erreur lors de la requête HTTP:", err)
+			fmt.Println("Error during HTTP request:", err)
 			return
 		}
-		defer response.Body.Close()
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
 
-		// Lisez le corps de la réponse
+			}
+		}(response.Body)
+
 		body, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			fmt.Println("Erreur lors de la lecture de la réponse HTTP:", err)
+			fmt.Println("Error reading HTTP response:", err)
 			return
 		}
 
-		// Vérifiez si la requête a réussi (statut 200 OK)
 		if response.StatusCode != http.StatusOK {
-			fmt.Println("La requête a échoué avec le statut:", response.Status)
+			fmt.Println("Request failed with status:", response.Status)
 			return
 		}
 
-		// Décodez le JSON dans une structure LocationsResponse
 		var result LocationsResponse
 		err = json.Unmarshal(body, &result)
 		if err != nil {
-			fmt.Println("Erreur lors du décodage JSON:", err)
+			fmt.Println("Error while decoding JSON:", err)
 			return
 		}
 
 		Artists[i].Locations = result.Locations
 	}
-	if time.Now().Unix()-dateInfo.Date >= 864000 {
+	if time.Now().Unix()-dateInfo.Date >= 86400 {
 		for i := 0; i < len(Artists); i++ {
 			MapArtist(i)
 		}
-		// Extrait uniquement les coordonnées des artistes
+
 		var coordinates [][][2]float64
 		for _, artist := range Artists {
 			var coo [][2]float64
@@ -195,29 +205,31 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 			coordinates = append(coordinates, coo)
 		}
 
-		// Ouvre le fichier en mode écriture et le tronque
 		file, err := os.OpenFile("coordinate.json", os.O_WRONLY|os.O_TRUNC, 0666)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		defer file.Close()
+		defer func(file *os.File) {
+			err := file.Close()
+			if err != nil {
 
-		// Convertit les coordonnées en JSON
+			}
+		}(file)
+
 		jsonData, err := json.MarshalIndent(coordinates, "", "    ")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		// Écrit les coordonnées JSON dans le fichier
 		_, err = file.Write(jsonData)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		fmt.Println("Les coordonnées ont été remplacées dans le fichier coordinates.json")
+		fmt.Println("Coordinates have been replaced in the file coordinates.json")
 		//fmt.Println(Artists)
 
 		fileTime, err := os.OpenFile("date.json", os.O_WRONLY|os.O_TRUNC, 0666)
@@ -225,19 +237,21 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		defer fileTime.Close()
+		defer func(fileTime *os.File) {
+			err := fileTime.Close()
+			if err != nil {
 
-		// Créer une nouvelle structure DateData avec la date actuelle
+			}
+		}(fileTime)
+
 		newDateInfo := DateData{Date: time.Now().Unix()}
 
-		// Convertir la nouvelle structure en JSON
 		jsonDate, err := json.MarshalIndent(newDateInfo, "", "    ")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		// Écrire la nouvelle date JSON dans le fichier "time.json"
 		_, err = fileTime.Write(jsonDate)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -249,9 +263,13 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		defer file.Close()
+		defer func(file *os.File) {
+			err := file.Close()
+			if err != nil {
 
-		// Décode le contenu JSON du fichier dans une structure de données
+			}
+		}(file)
+
 		var coordinates [][][2]float64
 		decoder := json.NewDecoder(file)
 		err = decoder.Decode(&coordinates)
@@ -268,7 +286,7 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		fmt.Println("Les coordonnées ont été mises à jour dans la struct Artist")
+		fmt.Println("The coordinates have been updated in the Artist struct")
 	}
 	for i := 0; i < len(Artists); i++ {
 		for j := 0; j < len(Artists[i].Coordinate); j++ {
@@ -290,26 +308,31 @@ func MapArtist(index int) {
 
 		response, err := client.Get(url)
 		if err != nil {
-			fmt.Println("Erreur lors de la requête HTTP :", err)
+			fmt.Println("\nError during HTTP request :", err)
 			return
 		}
-		defer response.Body.Close()
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
+
+			}
+		}(response.Body)
 
 		if response.StatusCode != http.StatusOK {
-			fmt.Println("La requête a échoué avec le code de statut :", response.StatusCode)
+			fmt.Println("Request failed with status code :", response.StatusCode)
 			return
 		}
 
 		body, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			fmt.Println("Erreur lors de la lecture de la réponse :", err)
+			fmt.Println("\nError reading response :", err)
 			return
 		}
 
 		var result OpenCageResponse
 		err = json.Unmarshal(body, &result)
 		if err != nil {
-			fmt.Println("Erreur lors de l'analyse JSON :", err)
+			fmt.Println("Error parsing JSON :", err)
 			return
 		}
 		Artists[index].Coordinate = append(Artists[index].Coordinate, DataCoordinate{})

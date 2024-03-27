@@ -34,13 +34,13 @@ body{
 }
 
 .info {
-    display: flex; /* Utiliser flexbox pour aligner les éléments de manière flexible */
-    flex-direction: column; /* Disposer les éléments verticalement */
+    display: flex;
+    flex-direction: column;
     font-size: 1.5vw;
 }
 
 .detail {
-    text-align: right; /* Aligner le texte à droite */
+    text-align: right;
     margin: 5px;
 }
 

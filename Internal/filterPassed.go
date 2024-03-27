@@ -7,7 +7,6 @@ import (
 
 // FilterPassed Filters API data with the desired filters
 func FilterPassed(artist Artist, filters FormValues) bool {
-	//fmt.Println(artist)
 	var result = false
 	if filters.MinCreationDate != 0 && filters.MaxCreationDate != 0 {
 		if artist.CreationDate > filters.MinCreationDate && artist.CreationDate < filters.MaxCreationDate {

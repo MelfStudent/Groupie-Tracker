@@ -12,24 +12,27 @@ import (
 	"Groupie-Tracker/Internal"
 )
 
-var tmpl *template.Template
-var tmpl_map *template.Template
+var tmplFilters *template.Template
+
+var tmplMap *template.Template
 var tmpl_groupe *template.Template
 
 func StartServer() {
 	var err error
 
-	tmpl, err = template.New("index").ParseFiles("Web/HTML/index.html")
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
+	tmplFilters, err = template.New("index").ParseFiles("template/index.html")
 	if err != nil {
 		panic(err)
 	}
 
-	tmpl_map, err = template.New("map").ParseFiles("Web/HTML/map.html")
+	tmplMap, err = template.New("map").ParseFiles("template/map.html")
 	if err != nil {
 		panic(err)
 	}
 
-	tmpl_groupe, err = template.New("groupe").ParseFiles("Web/HTML/groupe.html")
+	tmpl_groupe, err = template.New("groupe").ParseFiles("template/group.html")
 	if err != nil {
 		panic(err)
 	}
@@ -39,13 +42,28 @@ func StartServer() {
 		log.Fatal(err)
 	}
 
-	fileServer := http.FileServer(http.Dir(wd + "/Web"))
+	fileServer := http.FileServer(http.Dir(wd + "/template"))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
-			Internal.LoadArtist(w, r)
+			Internal.LoadArtist(w)
 			//Internal.MapArtist()
-			tmpl.Execute(w, Internal.Artists)
+			err := tmplFilters.Execute(w, Internal.Artists)
+			if err != nil {
+				return
+			}
+		} else {
+			fileServer.ServeHTTP(w, r)
+		}
+	})
+
+	http.HandleFunc("/filters", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/filters" {
+			Internal.LoadArtist(w)
+			err := tmplFilters.Execute(w, Internal.Artists)
+			if err != nil {
+				return
+			}
 		} else {
 			fileServer.ServeHTTP(w, r)
 		}
@@ -53,24 +71,23 @@ func StartServer() {
 
 	http.HandleFunc("/map", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/map" {
-			tmpl_map.Execute(w, Internal.Artists)
+			err := tmplMap.Execute(w, Internal.Artists)
+			if err != nil {
+				return
+			}
 		} else {
 			fileServer.ServeHTTP(w, r)
 		}
 	})
 
 	http.HandleFunc("/group/", func(w http.ResponseWriter, r *http.Request) {
-		// Extraire groupID de l'URL
 		groupID := strings.TrimPrefix(r.URL.Path, "/group/")
-		// Trouver le groupe correspondant dans Groups
 		for _, group := range Internal.Artists {
 			if strconv.Itoa(group.ID) == groupID {
-				// Afficher le template avec les détails du groupe
 				tmpl_groupe.ExecuteTemplate(w, "groupe", group)
 				return
 			}
 		}
-		// Gérer le cas où le groupe n'est pas trouvé
 		http.NotFound(w, r)
 	})
 
@@ -87,7 +104,7 @@ func StartServer() {
 				formValues[key] = r.Form.Get(key)
 			}
 			filteredArtists := Internal.ResultFilters(formValues, Internal.Artists)
-			err = tmpl.Execute(w, filteredArtists)
+			err = tmplFilters.Execute(w, filteredArtists)
 			if err != nil {
 				return
 			}
