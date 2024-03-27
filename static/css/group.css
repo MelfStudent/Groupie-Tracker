@@ -4,8 +4,30 @@
 }
 
 body{
-    background-color: black;
+    background-color: #2f303d;
     color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.button-container {
+    top: 15.5rem;
+    left: 1.5rem;
+    position: relative;
+}
+
+.filters-button {
+    width: 166px;
+    height: 119px;
+    padding: 41px 64px 50px 39px;
+    justify-content: flex-start;
+    align-items: center;
+    display: inline-fle;
+    margin-top: 65px;
+}
+
+.filters-button-logo {
+    width: 63px;
+    height: 28px;
 }
 
 .container{

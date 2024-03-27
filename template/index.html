@@ -4,26 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+    <title>Groupie-Tracker</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/sidebar.css">
 </head>
 <body>
 
 <div class="sidebar">
     <div class="sidebar-element">
-        <div class="logo">
-            <img src="../static/media/logo-site.png" alt="Logo">
-        </div>
+        <a href="/homepage" class="logo">
+            <img src="../static/media/LOGO_YNOV.png" alt="Logo">
+        </a>
         <form action="/updateFilters" method="post">
             <label>Select Range Creation Date: </label>
             <div>
-                <label for="creationDataMin"></label><input type="range" id="creationDataMin" name="creationDateSelectMin" value="1970" min="1900" max="2100" step="1" oninput="this.nextElementSibling.value = this.value">
-                <output>1970</output>
+                <label for="creationDataMin"></label><input type="range" id="creationDataMin" name="creationDateSelectMin" value="1958" min="1958" max="2015" step="1" oninput="this.nextElementSibling.value = this.value">
+                <output>1958</output>
             </div>
 
             <div>
-                <label for="creationDataMax"></label><input type="range" id="creationDataMax" name="creationDateSelectMax" value="2020" min="1900" max="2100" step="1" oninput="this.nextElementSibling.value = this.value">
-                <output>2020</output>
+                <label for="creationDataMax"></label><input type="range" id="creationDataMax" name="creationDateSelectMax" value="2015" min="1958" max="2015" step="1" oninput="this.nextElementSibling.value = this.value">
+                <output>2015</output>
             </div>
 
             <br>
@@ -37,7 +40,14 @@
             <br>
 
             <label>Select location of the concert: </label>
-            <label for="name"></label><input type="text" id="name" name="locationConcert" minlength="1" maxlength="30" size="35" />
+            <label for="name"></label><input type="text" id="name" list="research_locations" name="locationConcert" minlength="1" maxlength="30" size="35" placeholder="no city" />
+            <datalist id="research_locations">
+                {{range .}}
+                {{range .Locations}}
+                <option value="{{index .}}"></option>
+                {{end}}
+                {{end}}
+            </datalist>
 
             <fieldset>
                 <legend>Choose the number of members in the group:</legend>
@@ -79,7 +89,7 @@
 
             </fieldset>
 
-            <button type="submit">apply</button>
+            <button type="submit">Apply<svg fill="white" viewBox="0 0 448 512" height="1em" class="arrow"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path></svg></button>
             <br>
             <br>
             <br>
@@ -122,15 +132,14 @@
                     <img src="{{.Image}}" alt="{{.Name}}">
                     <h2>{{.Name}}</h2>
                 </div>
-                <div style="background-image: url({{.Image}})" class="flip-card-back">
+                <div class="flip-card-back">
                     <div class="in-flip-card-back">
                         <h1>{{.Name}}</h1>
-                        <hr>
-                        <p>-members-</p>
+                        <p>Members :</p>
                         <p>{{.Members}}</p>
-                        <p>-creationDate-</p>
+                        <p>CreationDate :</p>
                         <p>{{.CreationDate}}</p>
-                        <p>-firstAlbum-</p>
+                        <p>FirstAlbum :</p>
                         <p>{{.FirstAlbum}}</p>
                     </div>
                 </div>

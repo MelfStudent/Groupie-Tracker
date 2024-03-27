@@ -17,27 +17,30 @@ func FilterPassed(artist Artist, filters FormValues) bool {
 	}
 
 	if filters.MinFirstAlbum != 0 && filters.MaxFirstAlbum != 0 {
-		if filters.MinFirstAlbum > filters.MinFirstAlbum && filters.MaxFirstAlbum < filters.MaxFirstAlbum {
+		if filters.MinFirstAlbum < artist.CreationDate && filters.MaxFirstAlbum > artist.CreationDate {
 			result = true
+			fmt.Println("a")
 		} else {
 			result = false
 		}
 	}
 
-	var number = [7]bool{false, false, false, false, false, false, false}
-	for i := range filters.NumberMembers {
-		if filters.NumberMembers[i] != 0 {
-			if len(artist.Members) == filters.NumberMembers[i] {
-				number[i] = true
-			} else {
-				number[i] = false
+	if filters.NumberMembers != nil {
+		var number = [7]bool{false, false, false, false, false, false, false}
+		for i := range filters.NumberMembers {
+			if filters.NumberMembers[i] != 0 {
+				if len(artist.Members) == filters.NumberMembers[i] {
+					number[i] = true
+				} else {
+					number[i] = false
+				}
 			}
 		}
-	}
-	if number[0] == true || number[1] == true {
-		result = true
-	} else {
-		result = false
+		if number[0] == true || number[1] == true || number[2] == true || number[3] == true || number[4] == true || number[5] == true || number[6] == true {
+			result = true
+		} else {
+			result = false
+		}
 	}
 
 	if filters.LocationConcert != "" {
@@ -52,6 +55,7 @@ func FilterPassed(artist Artist, filters FormValues) bool {
 		}
 	}
 
+	fmt.Println(result)
 	return result
 }
 

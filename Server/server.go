@@ -13,9 +13,9 @@ import (
 )
 
 var tmplFilters *template.Template
-
+var tmplHomepage *template.Template
 var tmplMap *template.Template
-var tmpl_groupe *template.Template
+var tmplGroup *template.Template
 
 func StartServer() {
 	var err error
@@ -27,12 +27,17 @@ func StartServer() {
 		panic(err)
 	}
 
+	tmplHomepage, err = template.New("homepage").ParseFiles("template/homepage.html")
+	if err != nil {
+		panic(err)
+	}
+
 	tmplMap, err = template.New("map").ParseFiles("template/map.html")
 	if err != nil {
 		panic(err)
 	}
 
-	tmpl_groupe, err = template.New("groupe").ParseFiles("template/group.html")
+	tmplGroup, err = template.New("groupe").ParseFiles("template/group.html")
 	if err != nil {
 		panic(err)
 	}
@@ -47,8 +52,7 @@ func StartServer() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			Internal.LoadArtist(w)
-			//Internal.MapArtist()
-			err := tmplFilters.Execute(w, Internal.Artists)
+			err := tmplHomepage.Execute(w, Internal.SelectRandomGroups(Internal.Artists))
 			if err != nil {
 				return
 			}
@@ -59,8 +63,20 @@ func StartServer() {
 
 	http.HandleFunc("/filters", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/filters" {
-			Internal.LoadArtist(w)
+			//Internal.LoadArtist(w)
 			err := tmplFilters.Execute(w, Internal.Artists)
+			if err != nil {
+				return
+			}
+		} else {
+			fileServer.ServeHTTP(w, r)
+		}
+	})
+
+	http.HandleFunc("/homepage", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/homepage" {
+			//Internal.LoadArtist(w)
+			err := tmplHomepage.Execute(w, Internal.SelectRandomGroups(Internal.Artists))
 			if err != nil {
 				return
 			}
@@ -84,7 +100,10 @@ func StartServer() {
 		groupID := strings.TrimPrefix(r.URL.Path, "/group/")
 		for _, group := range Internal.Artists {
 			if strconv.Itoa(group.ID) == groupID {
-				tmpl_groupe.ExecuteTemplate(w, "groupe", group)
+				err := tmplGroup.ExecuteTemplate(w, "groupe", group)
+				if err != nil {
+					return
+				}
 				return
 			}
 		}

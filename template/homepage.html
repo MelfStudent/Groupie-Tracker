@@ -1,0 +1,49 @@
+{{define "homepage"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/homepage.css">
+    <link rel="stylesheet" href="../static/css/sidebar.css">
+</head>
+<body>
+
+<header class="sidebar">
+    <div class="sidebar-container">
+        <a href="/homepage" class="logo">
+            <img src="../static/media/LOGO_YNOV.png" alt="Logo">
+        </a>
+        <div class="button-container">
+            <div class="filters-button">
+                <a href="/filters" class="button-logo">
+                    <svg width="69" height="34" viewBox="0 0 69 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 3H66M14.25 17H54.75M27.75 31H41.25" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <section class="main-container">
+        <article class="main-page-banner">
+            <img class="banner" src="../static/media/banner.png" alt="Main Banner">
+        </article>
+        <aside class="random-artists-button">
+            {{range .}}
+                <a href="/group/{{.id}}" class="random-artist-outline">
+                    <img src="{{.image}}" alt="Group {{.id}}">
+                </a>
+            {{end}}
+        </aside>
+    </section>
+</main>
+</body>
+</html>
+{{ end }}
