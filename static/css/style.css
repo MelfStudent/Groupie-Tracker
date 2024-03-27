@@ -63,7 +63,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
+    gap: 0px;
     margin-top: 60px;
     margin-left: 210px;
 }
@@ -72,6 +72,9 @@ body {
     width: 250px;
     height: 300px;
     perspective: 1000px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
 }
 
 .flip-card-inner {
@@ -120,12 +123,15 @@ body {
     transform: rotateY(180deg);
     background-size: cover;
     background-position: center;
+    background-color: #52555A;
 }
 
 .in-flip-card-back {
+    position: relative;
     opacity: 1;
     z-index: 1;
-    color: black;
+    justify-self: center;
+    color: #ffffff;
 }
 
 input[type="range"] {
