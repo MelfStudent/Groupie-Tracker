@@ -181,7 +181,7 @@ func LoadArtist(w http.ResponseWriter, r *http.Request) {
 
 		Artists[i].Locations = result.Locations
 	}
-	if time.Now().Unix()-dateInfo.Date >= 86400 {
+	if time.Now().Unix()-dateInfo.Date >= 864000 {
 		for i := 0; i < len(Artists); i++ {
 			MapArtist(i)
 		}
