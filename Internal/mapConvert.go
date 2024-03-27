@@ -14,6 +14,7 @@ type FormValues struct {
 	NumberMembers   []int
 }
 
+// MapConvert Retrieves the data entered in the form and returns data that is not null
 func MapConvert(formValues map[string]string) (FormValues, error) {
 	var values FormValues
 
@@ -27,7 +28,6 @@ func MapConvert(formValues map[string]string) (FormValues, error) {
 			return values, err
 		}
 		values.MinCreationDate = minCreationDate
-		//fmt.Println(values.MinCreationDate)
 	}
 
 	if formValues["creationDateSelectMax"] != "" {
@@ -40,7 +40,6 @@ func MapConvert(formValues map[string]string) (FormValues, error) {
 			return values, err
 		}
 		values.MaxCreationDate = maxCreationDate
-		//fmt.Println(values.MaxCreationDate)
 	}
 
 	if formValues["firstAlbumSelectMin"] != "" {
@@ -53,7 +52,6 @@ func MapConvert(formValues map[string]string) (FormValues, error) {
 			return values, err
 		}
 		values.MinFirstAlbum = minFirstAlbum
-		//fmt.Println(values.MinFirstAlbum)
 	}
 
 	if formValues["firstAlbumSelectMax"] != "" {
@@ -66,7 +64,6 @@ func MapConvert(formValues map[string]string) (FormValues, error) {
 			return values, err
 		}
 		values.MaxFirstAlbum = maxFirstAlbum
-		//fmt.Println(values.MaxFirstAlbum)
 	}
 
 	if formValues["locationConcert"] != "" {
@@ -75,7 +72,6 @@ func MapConvert(formValues map[string]string) (FormValues, error) {
 			return values, errors.New("locationConcert is missing")
 		}
 		values.LocationConcert = locationConcertStr
-		//fmt.Println(values.NumberMembers)
 	}
 
 	if _, ok := formValues["number1"]; ok {

@@ -16,7 +16,7 @@ type FilteredArtist struct {
 	Relations    string   `json:"relations"`
 }
 
-// ResultFilters récupère les filtres d'entrée et retourne une structure avec les nouvelles données
+// ResultFilters retrieves input filters and returns a structure with the new data
 func ResultFilters(formValues map[string]string, _Artists []Artist) []FilteredArtist {
 	var Result []FilteredArtist
 	var formData, _ = MapConvert(formValues)
